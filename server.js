@@ -10,6 +10,7 @@ const connection = {
     password: process.env.MYSQL_PASSWORD,
     database: 'clients_db'
 }
+
 // routers
 const loginRouter = require('./router/Login.API');
 const cookieRouter = require('./router/Cookie.API');
