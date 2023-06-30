@@ -14,7 +14,7 @@ const connection = {
 // routers
 const loginRouter = require('./router/Login.API');
 const cookieRouter = require('./router/Cookie.API');
-
+const registerRouter = require('./router/register');
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -24,10 +24,7 @@ app.use('/', express.static('public'));
 app.use(cookieParser());
 
 //register post 데이터 받기
-app.post('/register', (req, res) => {
-    console.log(req.body);
-    res.send(`<span>${req.body.id}</span><p></p><span>${req.body.psw}</span>`)
-});
+app.use('/register', registerRouter);
 
 // login post 데이터 받기
 app.use('/login', loginRouter);
