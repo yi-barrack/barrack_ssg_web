@@ -7,7 +7,7 @@ const connection = mysql.createConnection({
     port: '3306',
     user: 'barrack',
     password: process.env.MYSQL_PASSWORD,
-    database: 'clients_db'
+    database: 'user_db'
 });
 
 router.post('/', (req, res) => {

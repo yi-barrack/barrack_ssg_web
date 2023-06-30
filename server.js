@@ -5,10 +5,10 @@ const mysql = require("mysql");
 require('dotenv').config();
 const connection = {
     host: 'localhost',
-    port: '5252',
+    port: '3306',
     user: 'barrack',
     password: process.env.MYSQL_PASSWORD,
-    database: 'clients_db'
+    database: 'clients'
 }
 
 // routers
