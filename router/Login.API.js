@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
     }
 });
 
-router.post('/login', (req, res) => {
+router.post('/', (req, res) => {
     var id = req.body.id;
     var psw = req.body.psw;
 

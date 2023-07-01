@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cookieParser = require("cookie-parser");
+const path = require('path');
 require('dotenv').config();
 
 // 라우터
@@ -14,32 +15,33 @@ const session = require('express-session');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-
-app.use('/', express.static('public'));
-
 app.use(cookieParser());
 
 app.use(session({
     secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: {
+        secure: false,
+        maxAge: 60 * 60 * 1000 // 1 시간동안 세션쿠기 유지
+    }
 }));
 
+
 app.use('/register', registerRouter);
-
 app.use('/login', loginRouter);
-
 app.use('/cookie', cookieRouter);
 
 // 로그인 한 유저라면 로그인 이후 페이지, 아니라면 index.html
 app.get('/', function (req, res) {
-    if (req.session && req.session.userLoggedIn) {
-        res.sendFile(path.join(__dirname, '../public/login_index.html'));
+    if (req.session.userLoggedIn) {
+        res.sendFile(path.join(__dirname, '/public/login_index.html'));
     } else {
-        res.sendFile(path.join(__dirname, '../public/index.html'));
+        res.sendFile(path.join(__dirname, './public/index.html'));
     }
 });
+
+app.use('/', express.static('public'));
 
 let port = 5555;
 
