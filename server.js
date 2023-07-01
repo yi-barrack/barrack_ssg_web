@@ -36,7 +36,7 @@ app.use('/for_users', ensureAuthenticated, express.static('for_users'));
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/username', nameRouter);
-
+app.use('/new', boardRouter);
 // 로그인 확인 미들웨어
 function ensureAuthenticated(req, res, next) {
     if (!req.session.userLoggedIn) {
