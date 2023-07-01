@@ -1,0 +1,161 @@
+body {
+    background-color: beige;
+}
+/* Full-width input fields */
+.container input[type=text], .container > input[type=password] {
+    width: 95%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+  }
+  
+  /* Add a background color when the inputs get focus */
+  .container input[type=text]:focus, .container input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+  }
+  
+  /* Set a style for all buttons */
+  .clearfix > button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+  }
+  
+  .clearfix > button:hover {
+    opacity:1;
+  }
+  
+  /* Extra styles for the cancel button */
+  .clearfix > .cancelbtn {
+    padding: 14px 20px;
+    background-color: #f44336;
+  }
+  
+  /* Float cancel and signup buttons and add an equal width */
+  .clearfix > .cancelbtn, .clearfix > .signupbtn {
+    float: left;
+    width: 50%;
+  }
+  
+  /* Add padding to container elements */
+  .container {
+    padding: 16px;
+  }
+  
+  /* The Modal (background) */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: #474e5d;
+    padding-top: 50px;
+  }
+  
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+  }
+  
+  /* Style the horizontal ruler */
+  .container > hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+  }
+   
+  /* The Close Button (x) */
+  .close {
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #f1f1f1;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #f44336;
+    cursor: pointer;
+  }
+  
+  /* Clear floats */
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  
+  /* Change styles for cancel button and signup button on extra small screens */
+  @media screen and (max-width: 300px) {
+    .cancelbtn, .signupbtn {
+       width: 100%;
+    }
+  }
+
+#login-wrapper {
+    width: 200px;
+    height: 200px;
+    padding: 3px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+#login-wrapper>h2 {
+    font-size: 24px;
+    color: #6a24fe;
+    margin-bottom: 10px;
+}
+
+#main_page_title {
+    color: blueviolet;
+    text-align: center;
+    margin: 30px 30px;
+}
+
+#login-form>input {
+    width: 100%;
+    height: 30px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    margin-bottom: 2px;
+    border-radius: 5px;
+    background-color: #F8F8F8;
+}
+
+#login-form>input::placeholder {
+    color: #d2d2d2;
+}
+
+#login-form>#login_submit {
+    color: #fff;
+    font-size: 16px;
+    background-color: #6A24FE;
+    margin-top: 13px;
+}
+
+#login-wrapper>#register_button {
+    height: 30px;
+    margin-bottom: 2px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    background-color: #6A24FE;
+    padding: 0px 65px;
+}
+

@@ -13,7 +13,7 @@ const pool = mysql.createPool({
 
 router.get('/', function (req, res) {
     if (req.session.userLoggedIn) {
-        res.sendFile(path.join(__dirname, '../public/login_index.html'));
+        res.sendFile(path.join(__dirname, '../for_users/login_index.html'));
     } else {
         res.sendFile(path.join(__dirname, '../public/index.html'));
     }

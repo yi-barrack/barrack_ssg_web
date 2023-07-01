@@ -32,25 +32,26 @@ app.use('/', express.static('public'));
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 
+// server.js
+// ...
 // 로그인 확인 미들웨어
 function ensureAuthenticated(req, res, next) {
-    if (req.path !== '/' && !req.session.userLoggedIn) {
+    if (!req.session.userLoggedIn) {
         res.redirect('/');
     } else {
         next();
     }
 }
 
-// 미들웨어를 전역적으로 적용합니다.
-app.use(ensureAuthenticated);
+// 로그인 확인 미들웨어를 적용할 라우트에만 적용합니다.
+app.use('/cookie', ensureAuthenticated, cookieRouter);
+// ...
 
-// 나머지 라우트를 정의합니다.
-app.use('/cookie', cookieRouter);
 
 // 로그인 한 유저라면 로그인 이후 페이지, 아니라면 index.html
 app.get('/', function (req, res) {
     if (req.session.userLoggedIn) {
-        res.sendFile(path.join(__dirname, '/public/login_index.html'));
+        res.sendFile(path.join(__dirname, '/for_users/login_index.html'));
     } else {
         res.sendFile(path.join(__dirname, '/public/index.html'));
     }
