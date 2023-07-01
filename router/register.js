@@ -19,8 +19,8 @@ router.post('/', (req, res) => {
     pool.query('INSERT INTO users (id, password) VALUES (?, ?)', [id, psw], function (error, results, fields) {
         if (error) throw error;
 
-        // 사용자 등록 성공 메시지를 보냅니다
-        res.send('<p>사용자 등록 성공</p>');
+        // 홈페이지로 돌려보내기.
+        res.redirect('/');
     });
 });
 

@@ -25,11 +25,12 @@
             </form>
 
             <!--register 창 부분-->
-            <button id="register_button" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Register</button>
+            <button id="register_button" onclick="document.getElementById('id01').style.display='block'"
+                style="width:auto;">Register</button>
             <div id="id01" class="modal">
                 <span onclick="document.getElementById('id01').style.display='none'" class="close"
-                    title="Close Modal">&times;</span>
-                    <!--id pw 를 action 주소에 post형식으로 보냄-->
+                    title="Close Modal">×</span>
+                <!--id pw 를 action 주소에 post형식으로 보냄-->
                 <form class="modal-content" method="post" action="/register">
                     <div class="container">
                         <h1>Register</h1>
@@ -56,14 +57,14 @@
             <script>
                 // Get the modal
                 var modal = document.getElementById('id01');
-                
+
                 // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function(event) {
-                  if (event.target == modal) {
-                    modal.style.display = "none";
-                  }
+                window.onclick = function (event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
                 }
-                </script>
+            </script>
         </div>
     </header>
 
@@ -77,6 +78,16 @@
     <aside></aside>
 
     <footer></footer>
+
+    <script>
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const registerSuccess = urlParams.get('register_success');
+            if (registerSuccess === 'true') {
+                alert('로그인 성공');
+            }
+        }
+    </script>
 
 </body>
 

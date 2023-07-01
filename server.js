@@ -1,15 +1,7 @@
 const express = require('express');
 const app = express();
 const cookieParser = require("cookie-parser");
-const mysql = require("mysql");
 require('dotenv').config();
-const connection = {
-    host: 'localhost',
-    port: '3306',
-    user: 'barrack',
-    password: process.env.MYSQL_PASSWORD,
-    database: 'clients'
-}
 
 // routers
 const loginRouter = require('./router/Login.API');

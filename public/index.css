@@ -109,12 +109,11 @@ body {
   }
 
 #login-wrapper {
-    margin-right: 8%;
     width: 200px;
     height: 200px;
     padding: 3px;
     box-sizing: border-box;
-    float: right;
+    margin: 0 auto;
 }
 
 #login-wrapper>h2 {
