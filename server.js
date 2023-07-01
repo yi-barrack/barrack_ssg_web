@@ -43,6 +43,12 @@ app.get('/', function (req, res) {
 
 app.use('/', express.static('public'));
 
+app.post('/logout', function (req, res) {
+    req.session.destroy();
+    res.sendStatus(200);
+});
+
+
 let port = 5555;
 
 app.listen(port, () => {

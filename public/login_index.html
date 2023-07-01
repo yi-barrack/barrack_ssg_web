@@ -15,19 +15,25 @@
     <header>
         <h1 id="main_page_title">Welcome to barrack's page</h1>
         <h2 style="text-align: center;">you are successfully logged in!</h2>
+        <button id="logoutButton">Logout</button>
     </header>
-    
+
     <nav>
-
     </nav>
-
     <section></section>
     <article></article>
-
     <aside></aside>
-
     <footer></footer>
 
+    <script>
+        document.getElementById('logoutButton').addEventListener('click', function () {
+            fetch('/logout', {
+                method: 'POST',
+            }).then(function () {
+                location.reload();
+            });
+        });
+    </script>
 </body>
 
 </html>
