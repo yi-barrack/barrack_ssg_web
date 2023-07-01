@@ -30,15 +30,17 @@ router.post('/', (req, res) => {
         // 사용자가 발견되면 로그인합니다
         if (results.length > 0) {
             req.session.userLoggedIn = true;
+            req.session.username = id;
             req.session.save(function (err) {
                 // 세션 저장이 완료되면 리다이렉트를 수행합니다.
                 res.redirect('/for_users/login_index.html'); // 이 부분을 수정했습니다.
             });
         }
         else {
-            res.send('<p>잘못된 id 또는 비밀번호</p>');
+            res.send("<script>alert('id 또는 비밀번호가 틀렸습니다');window.location.href='/';</script>");
         }
     });
 });
+
 
 module.exports = router;

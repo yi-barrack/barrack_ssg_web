@@ -14,17 +14,14 @@
 <body>
     <header>
         <h1 id="main_page_title">Welcome to barrack's page</h1>
-        <h2 style="text-align: center;">you are successfully logged in!</h2>
+        <h2 id="welcome_message" style="text-align: center;"></h2>
         <button id="logoutButton">Logout</button>
     </header>
-
-    <nav>
-    </nav>
+    <nav></nav>
     <section></section>
     <article></article>
     <aside></aside>
     <footer></footer>
-
     <script>
         document.getElementById('logoutButton').addEventListener('click', function () {
             fetch('/logout', {
@@ -32,6 +29,15 @@
             }).then(function () {
                 location.reload();
             });
+        });
+
+        // 사용자 이름을 가져와 페이지에 표시합니다.
+        fetch('/username').then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            if (data.username) {
+                document.getElementById('welcome_message').textContent = 'You are successfully logged in! Welcome ' + data.username + '!';
+            }
         });
     </script>
 </body>

@@ -8,6 +8,7 @@ require('dotenv').config();
 const loginRouter = require('./router/Login.API');
 const cookieRouter = require('./router/Cookie.API');
 const registerRouter = require('./router/register');
+const nameRouter = require('./router/name.API');
 
 // 세션
 const session = require('express-session');
@@ -32,6 +33,7 @@ app.use('/for_users', ensureAuthenticated, express.static('for_users'));
 // 로그인과 회원가입 라우트를 먼저 정의합니다.
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
+app.use('/username', nameRouter);
 
 // 로그인 확인 미들웨어
 function ensureAuthenticated(req, res, next) {
@@ -48,16 +50,21 @@ app.use('/cookie', cookieRouter);
 // 로그인 한 유저라면 로그인 이후 페이지, 아니라면 index.html
 app.get('/', function (req, res) {
     if (req.session.userLoggedIn) {
-        res.sendFile(path.join(__dirname, '/for_users/login_index.html'));
+        res.redirect('/for_users/login_index.html');
     } else {
         res.sendFile(path.join(__dirname, '/public/index.html'));
     }
 });
+// ...
+
 
 app.post('/logout', function (req, res) {
     req.session.destroy();
     res.sendStatus(200);
 });
+
+
+
 
 let port = 5555;
 app.listen(port, () => {
