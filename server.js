@@ -9,9 +9,11 @@ const loginRouter = require('./router/Login.API');
 const cookieRouter = require('./router/Cookie.API');
 const registerRouter = require('./router/register');
 const nameRouter = require('./router/name.API');
+const boardRouter = require('./router/boardRouter');
 
 // 세션
 const session = require('express-session');
+const { brotliCompress } = require('zlib');
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -45,6 +47,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 // 나머지 라우트를 정의합니다.
+app.use('/new', ensureAuthenticated, boardRouter);
 app.use('/cookie', cookieRouter);
 
 // 로그인 한 유저라면 로그인 이후 페이지, 아니라면 index.html
@@ -55,8 +58,6 @@ app.get('/', function (req, res) {
         res.sendFile(path.join(__dirname, '/public/index.html'));
     }
 });
-// ...
-
 
 app.post('/logout', function (req, res) {
     req.session.destroy();

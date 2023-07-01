@@ -16,6 +16,8 @@
         <h1 id="main_page_title">Welcome to barrack's page</h1>
         <h2 id="welcome_message" style="text-align: center;"></h2>
         <button id="logoutButton">Logout</button>
+        <hr>
+        <button id="newtext">게시글 작성</button>
     </header>
     <nav></nav>
     <section></section>
@@ -23,6 +25,11 @@
     <aside></aside>
     <footer></footer>
     <script>
+        document.getElementById('newtext').addEventListener('click', function () {
+                window.location.href = '/new';
+            });
+
+
         document.getElementById('logoutButton').addEventListener('click', function () {
             fetch('/logout', {
                 method: 'POST',

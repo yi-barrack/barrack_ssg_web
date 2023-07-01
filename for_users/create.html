@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: hsl(259, 99%, 57%, 0.4);
+            
+        }
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            flex-direction: column;
+        }
+
+        input[type="text"],
+        textarea {
+            width:80%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            background-color: #f8f8f8;
+            font-size: 16px;
+        }
+
+        input[type="text"] {
+            height: 50px;
+            width: 600px;
+            /* input 박스의 높이를 조절합니다. */
+        }
+
+        textarea {
+            height: 300px;
+            resize :none;
+            /* textarea의 높이를 조절합니다. */
+        }
+    </style>
+    <title>게시글 작성</title>
+</head>
+
+<body>
+    <div class="center">
+        <form action="/new" method="post">
+            <input type="text" id="title" name="title" placeholder="제목">
+            <hr>
+            <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요."></textarea>
+            <input type="submit" value="게시">
+        </form>
+    </div>
+</body>
+
+</html>
