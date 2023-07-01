@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
             req.session.userLoggedIn = true;
             req.session.save(function (err) {
                 // 세션 저장이 완료되면 리다이렉트를 수행합니다.
-                res.redirect('/');
+                res.redirect('/for_users/login_index.html'); // 이 부분을 수정했습니다.
             });
         }
         else {

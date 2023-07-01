@@ -27,13 +27,12 @@ app.use(session({
 
 // 정적 파일 제공 미들웨어를 먼저 적용합니다.
 app.use('/', express.static('public'));
+app.use('/for_users', ensureAuthenticated, express.static('for_users'));
 
 // 로그인과 회원가입 라우트를 먼저 정의합니다.
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 
-// server.js
-// ...
 // 로그인 확인 미들웨어
 function ensureAuthenticated(req, res, next) {
     if (!req.session.userLoggedIn) {
@@ -43,10 +42,8 @@ function ensureAuthenticated(req, res, next) {
     }
 }
 
-// 로그인 확인 미들웨어를 적용할 라우트에만 적용합니다.
-app.use('/cookie', ensureAuthenticated, cookieRouter);
-// ...
-
+// 나머지 라우트를 정의합니다.
+app.use('/cookie', cookieRouter);
 
 // 로그인 한 유저라면 로그인 이후 페이지, 아니라면 index.html
 app.get('/', function (req, res) {
@@ -56,7 +53,6 @@ app.get('/', function (req, res) {
         res.sendFile(path.join(__dirname, '/public/index.html'));
     }
 });
-
 
 app.post('/logout', function (req, res) {
     req.session.destroy();
