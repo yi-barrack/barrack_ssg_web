@@ -1,11 +1,9 @@
 const express = require('express');
-const session = require('express-session');
 const router = express.Router();
 const mysql = require('mysql');
 const path = require('path');
 
 const pool = mysql.createPool({
-    connectionLimit: 10,
     host: 'localhost',
     port: '3306',
     user: 'barrack',
@@ -13,23 +11,29 @@ const pool = mysql.createPool({
     database: 'user_db'
 });
 
-router.use(session({
-    secret: process.env.SESSION_KEY, // 비밀 키
-    resave: false,                   // 세션에 변경사항이 있을 시에만 세션을 다시 저장
-    saveUninitialized: true,        // 초기화 되지 않은 세션도 저장
-    cookie: { secure: false } // for https use { secure: true }
-}));
+router.get('/', function (req, res) {
+    if (req.session.userLoggedIn) {
+        res.sendFile(path.join(__dirname, '../public/login_index.html'));
+    } else {
+        res.sendFile(path.join(__dirname, '../public/index.html'));
+    }
+});
 
-router.post('/', (req, res) => {
+router.post('/login', (req, res) => {
     var id = req.body.id;
     var psw = req.body.psw;
 
+    // post된 id와 비번을 찾기 위해 데이터베이스 쿼리
     pool.query('SELECT * FROM users WHERE id = ? AND password = ?', [id, psw], function (error, results, fields) {
         if (error) throw error;
 
+        // 사용자가 발견되면 로그인합니다
         if (results.length > 0) {
             req.session.userLoggedIn = true;
-            res.sendFile(path.join(__dirname, '../public/login_index.html'));
+            req.session.save(function (err) {
+                // 세션 저장이 완료되면 리다이렉트를 수행합니다.
+                res.redirect('/');
+            });
         }
         else {
             res.send('<p>잘못된 id 또는 비밀번호</p>');
