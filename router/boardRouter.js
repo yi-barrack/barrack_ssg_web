@@ -27,12 +27,19 @@ router.get('/:id', function (req, res) {
         } else {
             if (results.length > 0) {
                 var post = results[0];
-                var postPage = '<h1>' + post.title + '</h1>';
-                postPage += '<p>작성자 : ' + post.author + '</p>';
-                postPage += '<p>' + post.content + '</p>';
+                // 수정 버튼 추가
+                // 새로운 페이지에서 제목, 내용, 작성자를 테이블 형태로 보여줍니다.
+                var postPage = '<style>\
+                table { border - collapse: collapse; } th, td { border: 1px solid black; padding: 8px; width: 300px;}\
+                #detail {height : 300px}\
+                </style > ';
                 if (req.session.username === post.author) {
                     postPage += '<button onclick="location.href=\'/board/edit/' + postId + '\'">수정</button>';
                 }
+                postPage += '<table>';
+                postPage += '<tr><th>제목</th><td>' + post.title + '</td><th>작성자</th><td>' + post.author + '</td></tr>';
+                postPage += '<tr><th id = "detail">내용</th><td colspan="3" id = "detail">' + post.content + '</td></tr>';
+                postPage += '</table>';
                 res.send(postPage);
 
             } else {
@@ -41,6 +48,7 @@ router.get('/:id', function (req, res) {
         }
     });
 });
+
 
 
 router.post('/new', function (req, res) {
