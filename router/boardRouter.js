@@ -27,7 +27,14 @@ router.get('/:id', function (req, res) {
         } else {
             if (results.length > 0) {
                 var post = results[0];
-                res.send(post);
+                var postPage = '<h1>' + post.title + '</h1>';
+                postPage += '<p>작성자 : ' + post.author + '</p>';
+                postPage += '<p>' + post.content + '</p>';
+                if (req.session.username === post.author) {
+                    postPage += '<button onclick="location.href=\'/board/edit/' + postId + '\'">수정</button>';
+                }
+                res.send(postPage);
+
             } else {
                 res.status(404).send('게시물 없음');
             }
