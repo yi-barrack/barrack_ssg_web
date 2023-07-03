@@ -18,6 +18,8 @@
         <button id="logoutButton">Logout</button>
         <hr>
         <button id="newtext">게시글 작성</button>
+        <hr>
+
     </header>
     <nav></nav>
     <section></section>
@@ -26,8 +28,8 @@
     <footer></footer>
     <script>
         document.getElementById('newtext').addEventListener('click', function () {
-                window.location.href = '/board/new';
-            });
+            window.location.href = '/board/new';
+        });
 
 
         document.getElementById('logoutButton').addEventListener('click', function () {
@@ -46,6 +48,51 @@
                 document.getElementById('welcome_message').textContent = 'You are successfully logged in! Welcome ' + data.username + '!';
             }
         });
+
+        // 게시글 정보를 가져와 페이지에 표시합니다.
+            fetch('/posts').then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                var postTable = document.createElement('table');
+                var headerRow = document.createElement('tr');
+                var titleHeader = document.createElement('th');
+                titleHeader.textContent = '제목';
+                headerRow.appendChild(titleHeader);
+                var authorHeader = document.createElement('th');
+                authorHeader.textContent = '작성자';
+                headerRow.appendChild(authorHeader);
+                var createdAtHeader = document.createElement('th');
+                createdAtHeader.textContent = '작성 시간';
+                headerRow.appendChild(createdAtHeader);
+                postTable.appendChild(headerRow);
+                for (var i = 0; i < data.length; i++) {
+                    var post = data[i];
+                    var postRow = document.createElement('tr');
+                    var postTitleCell = document.createElement('td');
+                    var postTitleLink = document.createElement('a');
+                    postTitleLink.href = '/board/' + post.id;
+                    postTitleLink.textContent = post.title;
+                    postTitleCell.appendChild(postTitleLink);
+                    postRow.appendChild(postTitleCell);
+                    var postAuthorCell = document.createElement('td');
+                    postAuthorCell.textContent = post.author;
+                    postRow.appendChild(postAuthorCell);
+                    var postCreatedAtCell = document.createElement('td');
+                    var date = new Date(post.created_at);
+                    var year = date.getFullYear();
+                    var month = date.getMonth() + 1;
+                    var day = date.getDate();
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    var seconds = date.getSeconds();
+                    var formattedDate = year + '-' + month.toString().padStart(2, '0') + '-' + day.toString().padStart(2, '0') + ' ' + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+                    postCreatedAtCell.textContent = formattedDate;
+                    postRow.appendChild(postCreatedAtCell);
+                    postTable.appendChild(postRow);
+                }
+                document.body.appendChild(postTable);
+            });
+
     </script>
 </body>
 

@@ -11,6 +11,8 @@ const pool = mysql.createPool({
     database: 'user_db'
 });
 
+
+
 router.get('/new', function (req, res) {
     res.sendFile(path.join(__dirname, '../for_users/create.html'));
 });

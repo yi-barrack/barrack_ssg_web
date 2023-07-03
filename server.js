@@ -10,6 +10,7 @@ const cookieRouter = require('./router/Cookie.API');
 const registerRouter = require('./router/register');
 const nameRouter = require('./router/name.API');
 const boardRouter = require('./router/boardRouter');
+const postsRouter = require('./router/Posts.API');
 
 // 세션
 const session = require('express-session');
@@ -37,6 +38,7 @@ app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/username', nameRouter);
 app.use('/new', boardRouter);
+app.use('/posts', postsRouter);
 // 로그인 확인 미들웨어
 function ensureAuthenticated(req, res, next) {
     if (!req.session.userLoggedIn) {
@@ -63,8 +65,6 @@ app.post('/logout', function (req, res) {
     req.session.destroy();
     res.sendStatus(200);
 });
-
-
 
 
 let port = 5555;
