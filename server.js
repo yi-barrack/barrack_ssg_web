@@ -47,7 +47,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 // 나머지 라우트를 정의합니다.
-app.use('/new', ensureAuthenticated, boardRouter);
+app.use('/board', ensureAuthenticated, boardRouter);
 app.use('/cookie', cookieRouter);
 
 // 로그인 한 유저라면 로그인 이후 페이지, 아니라면 index.html
