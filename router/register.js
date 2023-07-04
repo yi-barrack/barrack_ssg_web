@@ -16,11 +16,20 @@ router.post('/', (req, res) => {
     var psw = req.body.psw;
 
     // post된 id와 비번을 데이터베이스에 추가
-    pool.query('INSERT INTO users (id, password) VALUES (?, ?)', [id, psw], function (error, results, fields) {
+    // id가 중복되는지 검사
+    pool.query('SELECT * FROM users WHERE id = ?', [id], function (error, results, fields) {
         if (error) throw error;
-
-        // 홈페이지로 돌려보내기.
-        res.redirect('/');
+        if (results.length > 0) {
+            // 중복 아이디 이면
+            res.send('<script>alert("중복된 아이디입니다!");window.location.href="/";</script>')
+        } else {
+            // 아이디가 중복되지 않으면
+            pool.query('INSERT INTO users (id, password) VALUES (?, ?)', [id, psw], function (error, results, fields) {
+                if (error) throw error;
+                // 홈페이지로 돌려보내기.
+                res.redirect('/');
+            });
+        }
     });
 });
 
