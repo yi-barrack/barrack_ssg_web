@@ -10,7 +10,7 @@ const pool = mysql.createPool({
     database: 'user_db'
 });
 
-// 새로운 라우트 추가
+
 router.get('/', function (req, res) {
     pool.query('SELECT * FROM posts', function (error, results, fields) {
         if (error) {

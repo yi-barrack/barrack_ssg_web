@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const path = require('path');
+const editRouter = require('./edit.API');
+const deleteRouter = require('./delete.API');
 
 const pool = mysql.createPool({
     host: 'localhost',
@@ -11,7 +13,8 @@ const pool = mysql.createPool({
     database: 'user_db'
 });
 
-
+router.use('/delete', deleteRouter);
+router.use('/edit', editRouter);
 
 router.get('/new', function (req, res) {
     res.sendFile(path.join(__dirname, '../for_users/create.html'));
@@ -33,9 +36,15 @@ router.get('/:id', function (req, res) {
                 table { border - collapse: collapse; } th, td { border: 1px solid black; padding: 8px; width: 300px;}\
                 #detail {height : 300px}\
                 </style > ';
-                if (req.session.username === post.author) {
+                if (req.session.username === post.author) { //자신이 작성자일 경우에만 기능 사용 가능
+                    // 수정 버튼
                     postPage += '<button onclick="location.href=\'/board/edit/' + postId + '\'">수정</button>';
+                    // 삭제 버튼
+                    postPage += '<button onclick="location.href=\'/board/delete/' + postId + '\'">삭제</button>';
                 }
+                // 홈 버튼
+                postPage += '<button onclick="location.href=\'/\'">홈</button>';
+
                 postPage += '<table>';
                 postPage += '<tr><th>제목</th><td>' + post.title + '</td><th>작성자</th><td>' + post.author + '</td></tr>';
                 postPage += '<tr><th id = "detail">내용</th><td colspan="3" id = "detail">' + post.content + '</td></tr>';
@@ -58,10 +67,11 @@ router.post('/new', function (req, res) {
     var author = req.session.username;
 
     // 데이터베이스에 저장하기 위한 쿼리
-    pool.query('INSERT INTO posts (title, content, author) VALUES (?, ?, ?)', [title, content, author], function (error, results, fields) {
+    pool.query('INSERT INTO posts (title, content, author, created_at) VALUES (?, ?, ?, NOW())', [title, content, author], function (error, results, fields) {
         if (error) throw error;
         res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
     });
+    
 });
 
 module.exports = router;

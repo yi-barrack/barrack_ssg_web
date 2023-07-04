@@ -67,7 +67,7 @@ app.post('/logout', function (req, res) {
 });
 
 
-let port = 5555;
+let port = 1234;
 app.listen(port, () => {
     console.log('server on! http://localhost:' + port);
 });

@@ -11,6 +11,8 @@ const pool = mysql.createPool({
     database: 'user_db'
 });
 
+
+
 router.get('/', function (req, res) {
     if (req.session.userLoggedIn) {
         res.sendFile(path.join(__dirname, '../for_users/login_index.html'));
