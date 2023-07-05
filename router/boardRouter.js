@@ -68,6 +68,10 @@ router.get('/:id', function (req, res) {
                         postPage += '<li>';
                         postPage += '<strong>' + comment.author + '</strong> ';
                         postPage += formattedDate;
+                        // 삭제 버튼
+                        if (req.session.username === comment.author) {
+                            postPage += '<button onclick="location.href=\'/board/comment/delete/' + comment.id + '\'">삭제</button>'
+                        }
                         postPage += '<br>';
                         postPage += comment.content;
                         postPage += '</li>';
@@ -76,7 +80,7 @@ router.get('/:id', function (req, res) {
                     postPage += '<hr>';
                     postPage += '<form action="./comment" method="post">';
                     postPage += '<input type="hidden" name="postId" value="' + postId + '">';
-                    postPage += '<input type="text" id="content" name="content" placeholder="댓글을 입력하세요">';
+                    postPage += '<input type="text" id="content" name="content" placeholder="댓글을 입력하세요" style="height : 50px;">';
                     postPage += '</form>';
                     res.send(postPage); // 비동기라 안에 둬야 데이터베이스에서 가져온 후 작동
                 })

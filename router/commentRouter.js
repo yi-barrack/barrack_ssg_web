@@ -24,4 +24,27 @@ router.post('/', function (req, res) {
     });
 });
 
+// 댓글 삭제
+router.get('/delete/:id', function (req, res) {
+    var commentId = req.params.id;
+    pool.query('SELECT * FROM comments WHERE id = ?', [commentId], function (error, results, fields) {
+        if (error) throw error;
+        if (results.length > 0) {
+            var comment = results[0];
+            if (comment.author === req.session.username) {
+                pool.query('DELETE FROM comments WHERE id = ?', [commentId], function (error, results, fields) {
+                    if (error) throw error;
+                    res.redirect('back');
+                });
+            } else {
+                res.send("권한 없음");
+            }
+
+        } else {
+            res.send('댓글이 존재하지 않습니다.');
+        }
+    })
+})
+
+
 module.exports = router;
