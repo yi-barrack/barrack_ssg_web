@@ -5,6 +5,8 @@ const path = require('path');
 const editRouter = require('./edit.API');
 const deleteRouter = require('./delete.API');
 const commentRouter = require('./commentRouter');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const pool = mysql.createPool({
     host: 'localhost',
@@ -93,18 +95,31 @@ router.get('/:id', function (req, res) {
 
 
 
-router.post('/new', function (req, res) {
+router.post('/new', upload.single('file'), function (req, res) {
     // post로 온 데이터들을 변수로 지정
     var title = req.body.title;
     var content = req.body.content;
     var author = req.session.username;
+    var file = req.file;
 
-    // 데이터베이스에 저장하기 위한 쿼리
-    pool.query('INSERT INTO posts (title, content, author, created_at) VALUES (?, ?, ?, NOW())', [title, content, author], function (error, results, fields) {
+    if (!file) {
+        // 파일 업로드 실패
+        console.log('파일 업로드 실패');
+        res.redirect('/'); // 메인 페이지로 리다이렉트
+        return;
+    }
+
+    // 파일 db 저장
+    pool.query('INSERT INTO files (name, mimetype, size, data) VALUES (?, ?, ?, ?)', [file.originalname, file.mimetype, file.size, file.buffer], function (error, results, fields) {
         if (error) throw error;
-        res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
-    });
+        console.log("저장 성공");
 
+        // 데이터베이스에 저장하기 위한 쿼리
+        pool.query('INSERT INTO posts (title, content, author, created_at, file_id) VALUES (?, ?, ?, NOW(), ?)', [title, content, author, results.insertId], function (error, results, fields) {
+            if (error) throw error;
+            res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
+        });
+    });
 });
 
 module.exports = router;

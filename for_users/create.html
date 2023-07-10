@@ -57,10 +57,11 @@
 <body>
     <h1>게시글 작성</h1>
     <div class="center">
-        <form action="/board/new" method="post">
+        <form action="/board/new" method="post" enctype="multipart/form-data">
             <input type="text" id="title" name="title" placeholder="제목" required>
             <hr>
             <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요." required></textarea>
+            <input type="file" name="file" id="file">
             <input type="submit" value="게시">
         </form>
     </div>

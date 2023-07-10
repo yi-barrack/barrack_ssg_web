@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-const path = require('path');
 
 const pool = mysql.createPool({
     host: 'localhost',
@@ -39,7 +38,6 @@ router.get('/delete/:id', function (req, res) {
             } else {
                 res.send("권한 없음");
             }
-
         } else {
             res.send('댓글이 존재하지 않습니다.');
         }
