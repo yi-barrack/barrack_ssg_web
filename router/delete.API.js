@@ -52,11 +52,15 @@ router.get('/:id', function (req, res) {
 });
 
 router.post('/:id', function (req, res) {
-    pool.query('DELETE FROM posts WHERE id = ?', [req.params.id], function (error, results, fields) {
+    pool.query('DELETE FROM comments WHERE post_id = ?', [req.params.id], function (error, results, fields) {
         if (error) throw error;
-        res.redirect('/');
+        pool.query('DELETE FROM posts WHERE id = ?', [req.params.id], function (error, results, fields) {
+            if (error) throw error;
+            res.redirect('/');
+        });
     });
 });
+
 
 
 module.exports = router;
