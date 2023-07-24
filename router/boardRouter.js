@@ -6,7 +6,27 @@ const editRouter = require('./edit.API');
 const deleteRouter = require('./delete.API');
 const commentRouter = require('./commentRouter');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/') // 파일이 저장될 디렉토리 지정
+    },
+    filename:function(req,file,callback){
+        callback(null, file.originalname);
+    }
+})
+
+var upload = multer({ storage: storage })
+
+
+var upload = multer({
+    storage: storage,
+    limits: {
+        files: 1,
+        fileSize: 1024 * 1024 * 1024 // 1MB
+    }
+})
 
 const pool = mysql.createPool({
     host: 'localhost',
@@ -43,7 +63,7 @@ router.get('/:id', function (req, res) {
                 li { margin-bottom: 10px; }\
                 li > strong {margin-right:20px;}\
                 </style>';
-                
+
                 if (req.session.username === post.author) { //자신이 작성자일 경우에만 기능 사용 가능
                     // 수정 버튼
                     postPage += '<button onclick="location.href=\'/board/edit/' + postId + '\'">수정</button>';
@@ -57,6 +77,17 @@ router.get('/:id', function (req, res) {
                 postPage += '<tr><th>제목</th><td>' + post.title + '</td><th>작성자</th><td>' + post.author + '</td></tr>';
                 postPage += '<tr><th id = "detail">내용</th><td colspan="3" id = "detail">' + post.content + '</td></tr>';
                 postPage += '</table>';
+
+                // 파일 첨부
+                if (post.file_path) {
+                    //파일 다운로드
+                    var fileName = path.basename(post.file_path);
+                    var filePath = path.join(__dirname, '../' + post.file_path);
+
+                    postPage += '<a href="' + filePath + '" download="' + fileName + '">첨부파일 다운로드 (' + fileName + ')</a>';
+                }
+
+
 
                 // 댓글 기능 구현
                 pool.query('SELECT * FROM comments WHERE post_id = ?', [postId], function (error, results, fields) {
@@ -93,8 +124,7 @@ router.get('/:id', function (req, res) {
     });
 });
 
-
-
+// 게시글 작성
 router.post('/new', upload.single('file'), function (req, res) {
     // post로 온 데이터들을 변수로 지정
     var title = req.body.title;
@@ -102,24 +132,20 @@ router.post('/new', upload.single('file'), function (req, res) {
     var author = req.session.username;
     var file = req.file;
 
-    if (!file) {
-        // 파일 업로드 실패
-        console.log('파일 업로드 실패');
-        res.redirect('/'); // 메인 페이지로 리다이렉트
-        return;
-    }
-
-    // 파일 db 저장
-    pool.query('INSERT INTO files (name, mimetype, size, data) VALUES (?, ?, ?, ?)', [file.originalname, file.mimetype, file.size, file.buffer], function (error, results, fields) {
-        if (error) throw error;
-        console.log("저장 성공");
-
+    if (file) {
         // 데이터베이스에 저장하기 위한 쿼리
-        pool.query('INSERT INTO posts (title, content, author, created_at, file_id) VALUES (?, ?, ?, NOW(), ?)', [title, content, author, results.insertId], function (error, results, fields) {
+        pool.query('INSERT INTO posts (title, content, author, created_at, file_path) VALUES (?, ?, ?, NOW(), ?)', [title, content, author, file.path], function (error, results, fields) {
             if (error) throw error;
             res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
         });
-    });
+    } else {
+        // 파일 업로드 안함
+        pool.query('INSERT INTO posts (title, content, author, created_at) VALUES (?, ?, ?, NOW())', [title, content, author], function (error, results, fields) {
+            if (error) throw error;
+            res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
+        });
+    }
 });
 
 module.exports = router;
+
