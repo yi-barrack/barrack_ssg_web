@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const path = require('path');
 const editRouter = require('./edit.API');
 const deleteRouter = require('./delete.API');
