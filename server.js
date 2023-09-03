@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const path = require('path');
 require('dotenv').config();
 
+
 // 라우터
 const loginRouter = require('./router/Login.API');
 const cookieRouter = require('./router/Cookie.API');
@@ -38,7 +39,7 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: false,
-        maxAge: 60*60*1000*50, // 1 시간동안 세션쿠기 유지
+        //maxAge: 60*60*1000*50, // 1 시간동안 세션쿠기 유지
         // path: '/',
         Domain: 'http://kindergarden.newbie.battle.sejongssg.kr',
         //Domain: 'http://sejongssg.kr',

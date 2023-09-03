@@ -5,6 +5,8 @@ const path = require('path');
 const editRouter = require('./edit.API');
 const deleteRouter = require('./delete.API');
 const commentRouter = require('./commentRouter');
+const xssFilters = require('xss-filters');
+
 const multer = require('multer');
 
 
@@ -74,8 +76,11 @@ router.get('/:id', function (req, res) {
                 postPage += '<button onclick="location.href=\'/\'">홈</button>';
 
                 postPage += '<table>';
-                postPage += '<tr><th>제목</th><td>' + post.title + '</td><th>작성자</th><td>' + post.author + '</td></tr>';
-                postPage += '<tr><th id = "detail">내용</th><td colspan="3" id = "detail">' + post.content + '</td></tr>';
+                var safeTitle = xssFilters.inHTMLData(post.title);
+                var safeAuthor = xssFilters.inHTMLData(post.author);
+                var safeContent = xssFilters.inHTMLData(post.content);
+                postPage += '<tr><th>제목</th><td>' + safeTitle + '</td><th>작성자</th><td>' + safeAuthor + '</td></tr>';
+                postPage += '<tr><th id = "detail">내용</th><td colspan="3" id = "detail">' + safeContent + '</td></tr>';
                 postPage += '</table>';
 
                 // 파일 첨부
@@ -99,14 +104,16 @@ router.get('/:id', function (req, res) {
                         var date = new Date(comment.created_at);
                         var formattedDate = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0') + ' ' + date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
                         postPage += '<li>';
-                        postPage += '<strong>' + comment.author + '</strong> ';
+                        safeAuthor = xssFilters.inHTMLData(comment.author);
+                        postPage += '<strong>' + safeAuthor + '</strong> ';
                         postPage += formattedDate;
                         // 삭제 버튼
-                        if (req.session.username === comment.author) {
+                        if (req.session.username === safeAuthor) {
                             postPage += '<button onclick="location.href=\'/board/comment/delete/' + comment.id + '\'">삭제</button>'
                         }
                         postPage += '<br>';
-                        postPage += comment.content;
+                        safeContent = xssFilters.inHTMLData(comment.content);
+                        postPage += safeContent;
                         postPage += '</li>';
                     }
                     postPage += '</ul>';
@@ -132,20 +139,25 @@ router.post('/new', upload.single('file'), function (req, res) {
     var author = req.session.username;
     var file = req.file;
 
+    // 사용자 입력 필터링
+    var safeTitle = xssFilters.inHTMLData(title);
+    var safeContent = xssFilters.inHTMLData(content);
+
     if (file) {
         // 데이터베이스에 저장하기 위한 쿼리
-        pool.query('INSERT INTO posts (title, content, author, created_at, file_path) VALUES (?, ?, ?, NOW(), ?)', [title, content, author, file.path], function (error, results, fields) {
+        pool.query('INSERT INTO posts (title, content, author, created_at, file_path) VALUES (?, ?, ?, NOW(), ?)', [safeTitle, safeContent, author, file.path], function (error, results, fields) {
             if (error) throw error;
             res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
         });
     } else {
         // 파일 업로드 안함
-        pool.query('INSERT INTO posts (title, content, author, created_at) VALUES (?, ?, ?, NOW())', [title, content, author], function (error, results, fields) {
+        pool.query('INSERT INTO posts (title, content, author, created_at) VALUES (?, ?, ?, NOW())', [safeTitle, safeContent, author], function (error, results, fields) {
             if (error) throw error;
             res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
         });
     }
 });
+
 
 module.exports = router;
 
