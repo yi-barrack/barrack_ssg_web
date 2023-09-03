@@ -1,3 +1,4 @@
+const { log } = require('console');
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql2');
@@ -10,7 +11,6 @@ const pool = mysql.createPool({
     password: process.env.MYSQL_PASSWORD,
     database: 'user_db'
 });
-
 
 
 router.get('/', function (req, res) {
@@ -31,11 +31,14 @@ router.post('/', (req, res) => {
 
         // 사용자가 발견되면 로그인합니다
         if (results.length > 0) {
-            req.session.userLoggedIn = true;
-            req.session.username = id;
-            req.session.save(function (err) {
-                // 세션 저장이 완료되면 리다이렉트를 수행합니다.
-                res.redirect('/for_users/login_index.html'); // 이 부분을 수정했습니다.
+            req.session.regenerate(function (err) {
+                console.log(id + "  login success")
+                req.session.userLoggedIn = true;
+                req.session.username = id;
+                req.session.save(function (err) {
+                    // 세션 저장이 완료되면 리다이렉트를 수행합니다.
+                    res.redirect('/for_users/login_index.html');
+                });
             });
         }
         else {

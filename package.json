@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js --delay 3"
   },
   "author": "",
   "license": "ISC",
@@ -28,5 +28,8 @@
     "url": "https://github.com/yi-barrack/barrack_ssg_web/issues"
   },
   "homepage": "https://github.com/yi-barrack/barrack_ssg_web#readme",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "kill-port": "^2.0.1"
+  }
 }

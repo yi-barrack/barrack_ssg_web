@@ -15,17 +15,34 @@ const postsRouter = require('./router/Posts.API');
 // 세션
 const session = require('express-session');
 const { brotliCompress } = require('zlib');
+const { Domain } = require('domain');
+const { domainToASCII } = require('url');
+const { Session } = require('inspector');
+
+/*
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://kindergarden.newbie.battle.sejongssg.kr");
+    res.header("Access-Control-Allow-Credentials", "true");
+    next();
+});
+*/
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
+app.set('trust proxy', 1);
 app.use(session({
     secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: true,
     cookie: {
+        httpOnly: true,
         secure: false,
-        maxAge: 60 * 60 * 1000 // 1 시간동안 세션쿠기 유지
+        maxAge: 60*60*1000*50, // 1 시간동안 세션쿠기 유지
+        // path: '/',
+        Domain: 'http://kindergarden.newbie.battle.sejongssg.kr',
+        //Domain: 'http://sejongssg.kr',
+        sameSite: 'lax'
     }
 }));
 
@@ -39,8 +56,10 @@ app.use('/register', registerRouter);
 app.use('/username', nameRouter);
 app.use('/new', boardRouter);
 app.use('/posts', postsRouter);
+
 // 로그인 확인 미들웨어
 function ensureAuthenticated(req, res, next) {
+    console.log(req.headers)
     if (!req.session.userLoggedIn) {
         res.redirect('/');
     } else {
@@ -68,6 +87,7 @@ app.post('/logout', function (req, res) {
 
 
 let port = 1234;
+
 app.listen(port, () => {
-    console.log('server on! http://10.2.0.53:' + 80);
+    console.log('server on! http://kindergarden.newbie.battle.sejongssg.kr/');
 });
