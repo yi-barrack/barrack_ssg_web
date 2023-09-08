@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql2');
 const path = require('path');
+const xssFilters = require('xss-filters');
+
 
 const pool = mysql.createPool({
     host: 'localhost',
@@ -34,6 +36,9 @@ router.get('/:id', function (req, res) {
         if (error) throw error;
         if (results.length > 0) {
             var post = results[0];
+            var safeid = xssFilters.inHTMLData(post.id);
+            var safecontent = xssFilters.inHTMLData(post.content);
+            var safetitle = xssFilters.inHTMLData(post.title);
             res.send(`
             <!DOCTYPE html>
             <html lang="ko">
@@ -89,16 +94,16 @@ router.get('/:id', function (req, res) {
             margin: 8px auto;
         }
     </style>
-                <title>${post.title} 수정</title>
+                <title>${safetitle} 수정</title>
             </head>
             
             <body>
-            <h1>${post.title} 글 수정</h1>
+            <h1>${safetitle} 글 수정</h1>
                 <div class="center">
-                    <form action="/board/edit/${post.id}" method="post">
-                        <input type="text" id="title" name="title" value="${post.title}" required>
+                    <form action="/board/edit/${safeid}" method="post">
+                        <input type="text" id="title" name="title" value="${safetitle}" required>
                         <br>
-                        <textarea id="content" name="content" rows="10" required>${post.content}</textarea>
+                        <textarea id="content" name="content" rows="10" required>${safecontent}</textarea>
                         <input type="submit" value="수정">
                     </form>
     </div>

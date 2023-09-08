@@ -87,8 +87,9 @@ router.get('/:id', function (req, res) {
                 if (post.file_path) {
                     //파일 다운로드
                     var fileName = path.basename(post.file_path);
-                    var filePath = path.join(__dirname, '../' + post.file_path);
-
+                    var filePath = path.join("/uploads");
+                    console.log(fileName);
+                    console.log(filePath);
                     postPage += '<a href="' + filePath + '" download="' + fileName + '">첨부파일 다운로드 (' + fileName + ')</a>';
                 }
 
@@ -102,7 +103,7 @@ router.get('/:id', function (req, res) {
                     for (var i = 0; i < results.length; i++) {
                         var comment = results[i];
                         var date = new Date(comment.created_at);
-                        var formattedDate = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0') + ' ' + date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+                        var formattedDate = date.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
                         postPage += '<li>';
                         safeAuthor = xssFilters.inHTMLData(comment.author);
                         postPage += '<strong>' + safeAuthor + '</strong> ';

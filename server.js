@@ -19,6 +19,7 @@ const { brotliCompress } = require('zlib');
 const { Domain } = require('domain');
 const { domainToASCII } = require('url');
 const { Session } = require('inspector');
+const { log } = require('console');
 
 /*
 app.use(function (req, res, next) {
@@ -71,6 +72,10 @@ function ensureAuthenticated(req, res, next) {
 // 나머지 라우트를 정의합니다.
 app.use('/board', ensureAuthenticated, boardRouter);
 app.use('/cookie', cookieRouter);
+
+app.head('/', function (req, res) {
+    console.log(req.headers)
+});
 
 // 로그인 한 유저라면 로그인 이후 페이지, 아니라면 index.html
 app.get('/', function (req, res) {

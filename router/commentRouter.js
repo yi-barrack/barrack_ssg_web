@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql2');
+const xssFilters = require('xss-filters');
+
 
 const pool = mysql.createPool({
     host: 'localhost',
@@ -16,10 +18,14 @@ router.post('/', function (req, res) {
     var author = req.session.username;
     var postId = req.body.postId;
 
+    var safeContent = xssFilters.inHTMLData(content);
+    var safeAuthor = xssFilters.inHTMLData(author);
+    var safepostId = xssFilters.inHTMLData(postId);
+
     // 데이터베이스에 저장하기 위한 쿼리
-    pool.query('INSERT INTO comments (post_id, content, author) VALUES (?, ?, ?)', [postId, content, author], function (error, results, fields) {
+    pool.query('INSERT INTO comments (post_id, content, author) VALUES (?, ?, ?)', [safepostId, safeContent, safeAuthor], function (error, results, fields) {
         if (error) throw error;
-        res.redirect('/board/' + postId);
+        res.redirect('/board/' + safepostId);
     });
 });
 
