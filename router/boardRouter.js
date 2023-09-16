@@ -7,29 +7,38 @@ const commentRouter = require('./commentRouter');
 const xssFilters = require('xss-filters');
 
 const multer = require('multer');
+const pool = require('./db.js');
 
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/') // 파일이 저장될 디렉토리 지정
     },
-    filename:function(req,file,callback){
-        callback(null, file.originalname);
+    filename: function (req, file, callback) {
+        const ext = path.extname(file.originalname);
+        const id = uuidv4(); // uuidv4 함수를 통해 고유한 UUID 생성. 고유한 파일 이름을 생성해서 서버에 영향 안주게 함.
+        callback(null, `${id}${ext}`);
     }
 })
-
-var upload = multer({ storage: storage })
-
 
 var upload = multer({
     storage: storage,
     limits: {
         files: 1,
         fileSize: 1024 * 1024 * 1024 // 1MB
+    },
+    fileFilter: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png') {
+            return cb(new Error('Only JPG, JPEG, PNG are allowed'), false);
+        }
+        cb(null, true);
     }
 })
 
-const pool = require('./db.js');
+
+
+
 
 router.use('/delete', deleteRouter);
 router.use('/edit', editRouter);
@@ -126,30 +135,40 @@ router.get('/:id', function (req, res) {
 });
 
 // 게시글 작성
-router.post('/new', upload.single('file'), function (req, res) {
-    // post로 온 데이터들을 변수로 지정
-    var title = req.body.title;
-    var content = req.body.content;
-    var author = req.session.username;
-    var file = req.file;
+router.post('/new', function (req, res) {
+    upload.single('file')(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            // 파일 용량 초과
+            res.status(500).send({ error: 'File upload failed.' });
+        } else if (err) {
+            // 파일 업로드 안하면
+            res.status(500).send({ error: 'File upload failed.' });
+        } else {
+            // post로 온 데이터들을 변수로 지정
+            var title = req.body.title;
+            var content = req.body.content;
+            var author = req.session.username;
+            var file = req.file;
 
-    // 사용자 입력 필터링
-    var safeTitle = xssFilters.inHTMLData(title);
-    var safeContent = xssFilters.inHTMLData(content);
+            // 사용자 입력 필터링
+            var safeTitle = xssFilters.inHTMLData(title);
+            var safeContent = xssFilters.inHTMLData(content);
 
-    if (file) {
-        // 데이터베이스에 저장하기 위한 쿼리
-        pool.query('INSERT INTO posts (title, content, author, created_at, file_path) VALUES (?, ?, ?, NOW(), ?)', [safeTitle, safeContent, author, file.path], function (error, results, fields) {
-            if (error) throw error;
-            res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
-        });
-    } else {
-        // 파일 업로드 안함
-        pool.query('INSERT INTO posts (title, content, author, created_at) VALUES (?, ?, ?, NOW())', [safeTitle, safeContent, author], function (error, results, fields) {
-            if (error) throw error;
-            res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
-        });
-    }
+            if (file) {
+                // 데이터베이스에 저장하기 위한 쿼리
+                pool.query('INSERT INTO posts (title, content, author, created_at, file_path) VALUES (?, ?, ?, NOW(), ?)', [safeTitle, safeContent, author, file.path], function (error, results, fields) {
+                    if (error) throw error;
+                    res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
+                });
+            } else {
+                // 파일 업로드 안함
+                pool.query('INSERT INTO posts (title, content, author, created_at) VALUES (?, ?, ?, NOW())', [safeTitle, safeContent, author], function (error, results, fields) {
+                    if (error) throw error;
+                    res.redirect('/'); // 게시글 작성 후 메인 페이지로 리다이렉트
+                });
+            }
+        }
+    });
 });
 
 
