@@ -1,17 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql2');
 const path = require('path');
 const xssFilters = require('xss-filters');
-
-
-const pool = mysql.createPool({
-    host: 'localhost',
-    port: '3306',
-    user: 'barrack',
-    password: process.env.MYSQL_PASSWORD,
-    database: 'user_db'
-});
+const pool = require('./db.js');
 
 
 // 미들웨어 기능(작성자만 접속 가능하도록)

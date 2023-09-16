@@ -1,14 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql2');
-
-const pool = mysql.createPool({
-    host: 'localhost',
-    port: '3306',
-    user: 'barrack',
-    password: process.env.MYSQL_PASSWORD,
-    database: 'user_db'
-});
+const pool = require('./db.js');
 
 
 router.get('/', function (req, res) {

@@ -32,7 +32,6 @@ app.use(function (req, res, next) {
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
-app.set('trust proxy', 1);
 app.use(session({
     secret: process.env.SESSION_KEY,
     resave: false,

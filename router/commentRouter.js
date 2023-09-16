@@ -1,16 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql2');
 const xssFilters = require('xss-filters');
 
 
-const pool = mysql.createPool({
-    host: 'localhost',
-    port: '3306',
-    user: 'barrack',
-    password: process.env.MYSQL_PASSWORD,
-    database: 'user_db'
-});
+const pool = require('./db.js');
 
 router.post('/', function (req, res) {
     // post로 온 데이터들을 변수로 지정
