@@ -90,8 +90,8 @@ router.get('/:id', function (req, res) {
                     //파일 다운로드
                     var fileName = path.basename(post.file_path);
                     var filePath = path.join("/uploads");
-                    console.log(fileName);
-                    console.log(filePath);
+                    //console.log(fileName);
+                    //console.log(filePath);
                     postPage += '<a href="' + filePath + '" download="' + fileName + '">첨부파일 다운로드 (' + fileName + ')</a>';
                 }
 

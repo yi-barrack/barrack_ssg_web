@@ -60,7 +60,7 @@ app.use('/posts', postsRouter);
 
 // 로그인 확인 미들웨어
 function ensureAuthenticated(req, res, next) {
-    console.log(req.headers)
+    //console.log(req.headers)
     if (!req.session.userLoggedIn) {
         res.redirect('/');
     } else {
@@ -72,9 +72,9 @@ function ensureAuthenticated(req, res, next) {
 app.use('/board', ensureAuthenticated, boardRouter);
 app.use('/cookie', cookieRouter);
 
-app.head('/', function (req, res) {
-    console.log(req.headers)
-});
+//app.head('/', function (req, res) {
+//    console.log(req.headers)
+//});
 
 // 로그인 한 유저라면 로그인 이후 페이지, 아니라면 index.html
 app.get('/', function (req, res) {
