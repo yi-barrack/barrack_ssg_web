@@ -12,6 +12,7 @@ const registerRouter = require('./router/register');
 const nameRouter = require('./router/name.API');
 const boardRouter = require('./router/boardRouter');
 const postsRouter = require('./router/Posts.API');
+const infoRouter = require('./router/info.API');
 
 // 세션
 const session = require('express-session');
@@ -19,7 +20,7 @@ const { brotliCompress } = require('zlib');
 const { Domain } = require('domain');
 const { domainToASCII } = require('url');
 const { Session } = require('inspector');
-const { log } = require('console');
+const { log, info } = require('console');
 
 /*
 app.use(function (req, res, next) {
@@ -71,6 +72,7 @@ function ensureAuthenticated(req, res, next) {
 // 나머지 라우트를 정의합니다.
 app.use('/board', ensureAuthenticated, boardRouter);
 app.use('/cookie', cookieRouter);
+app.use('/info', ensureAuthenticated, infoRouter);
 
 //app.head('/', function (req, res) {
 //    console.log(req.headers)

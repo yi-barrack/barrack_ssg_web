@@ -52,47 +52,11 @@
                     </div>
                 </form>
             </div>
-            <script>
-                // Get the modal
-                var modal = document.getElementById('id01');
-
-                // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function (event) {
-                    if (event.target == modal) {
-                        modal.style.display = "none";
-                    }
-                }
-            </script>
+            <script src="modal.js"></script>
         </div>
     </header>
 
-    <nav>
-
-    </nav>
-
-    <section></section>
-    <article></article>
-
-    <aside></aside>
-
-    <footer></footer>
-
-    <script>
-        window.onload = function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const registerSuccess = urlParams.get('register_success');
-            if (registerSuccess === 'true') {
-                alert('로그인 성공');
-            }
-        }
-         fetch('/username')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.username) {
-                        window.location.href = '/for_users/login_index.html';
-                    }
-                });
-    </script>
+    <script src="script.js"></script>
 
 </body>
 

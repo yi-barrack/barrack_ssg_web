@@ -5,7 +5,6 @@ const editRouter = require('./edit.API');
 const deleteRouter = require('./delete.API');
 const commentRouter = require('./commentRouter');
 const xssFilters = require('xss-filters');
-
 const multer = require('multer');
 const pool = require('./db.js');
 

@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const xssFilters = require('xss-filters');
-
-
 const pool = require('./db.js');
 
 router.post('/', function (req, res) {
