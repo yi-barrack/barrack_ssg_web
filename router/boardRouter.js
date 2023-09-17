@@ -68,7 +68,7 @@ router.get('/:id', function (req, res) {
                 li > strong {margin-right:20px;}\
                 </style>';
 
-                if (req.session.username === post.author) { //자신이 작성자일 경우에만 기능 사용 가능
+                if (req.session.username === post.author || req.session.username === 'admin') { //자신이 작성자일 경우에만 기능 사용 가능
                     // 수정 버튼
                     postPage += '<button onclick="location.href=\'/board/edit/' + postId + '\'">수정</button>';
                     // 삭제 버튼
@@ -111,7 +111,7 @@ router.get('/:id', function (req, res) {
                         postPage += '<strong>' + safeAuthor + '</strong> ';
                         postPage += formattedDate;
                         // 삭제 버튼
-                        if (req.session.username === safeAuthor) {
+                        if (req.session.username === safeAuthor || req.session.username === 'admin') {
                             postPage += '<button onclick="location.href=\'/board/comment/delete/' + comment.id + '\'">삭제</button>'
                         }
                         postPage += '<br>';

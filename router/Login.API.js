@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
     // post된 id와 비번을 찾기 위해 데이터베이스 쿼리
     pool.query('SELECT * FROM users WHERE id = ? AND password = ?', [id, psw], function (error, results, fields) {
         if (error) throw error;
-
+        
         // 사용자가 발견되면 로그인합니다
         if (results.length > 0) {
             req.session.regenerate(function (err) {

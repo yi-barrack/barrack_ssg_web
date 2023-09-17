@@ -29,7 +29,7 @@ router.get('/delete/:id', function (req, res) {
         if (error) throw error;
         if (results.length > 0) {
             var comment = results[0];
-            if (comment.author === req.session.username) {
+            if (comment.author === req.session.username || req.session.username === 'admin') {
                 pool.query('DELETE FROM comments WHERE id = ?', [commentId], function (error, results, fields) {
                     if (error) throw error;
                     res.redirect('back');

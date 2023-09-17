@@ -11,7 +11,7 @@ router.use('/:id', function(req,res,next) {
         if (error) throw error;
         if (results.length>0){
             var post = results[0];
-            if (req.session.username === post.author) {
+            if (req.session.username === post.author || req.session.username === 'admin') {
                 next();
             } else {
                 res.status(403).send("권한이 없습니다");

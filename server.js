@@ -94,5 +94,5 @@ app.post('/logout', function (req, res) {
 let port = 1234;
 
 app.listen(port, () => {
-    console.log('server on! http://kindergarden.newbie.battle.sejongssg.kr/');
+    console.log('server on! http://127.0.0.1:1234');
 });
