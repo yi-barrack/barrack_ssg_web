@@ -138,10 +138,10 @@ router.post('/new', function (req, res) {
     upload.single('file')(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             // 파일 용량 초과
-            res.status(500).send({ error: 'File upload failed.' });
+            res.status(500).send({ error: '크기가 너무 큽니다.' });
         } else if (err) {
-            // 파일 업로드 안하면
-            res.status(500).send({ error: 'File upload failed.' });
+            // 
+            res.status(500).send({ error: '확장자는 jpg, jpeg, png만 가능합니다.' });
         } else {
             // post로 온 데이터들을 변수로 지정
             var title = req.body.title;
