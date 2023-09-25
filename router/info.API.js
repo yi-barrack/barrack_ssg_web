@@ -19,6 +19,14 @@ function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString('ko-KR', options);
 }
 
+router.get('/attendant', function (req, res) {
+    // 등원 버튼을 누를 시 result.attendant를 1로 변경
+    // 하원 버튼을 누릴 시 result.attendant를 0으로 변경
+    // 결석 버튼을 누를 시 result.attendant를 2로 변경
+    
+});
+
+
 router.get('/', function (req, res) {
     pool.query('SELECT * FROM students', function (err, results) {
         if (err) {
@@ -67,5 +75,7 @@ router.get('/', function (req, res) {
         res.send(html);
     });
 });
+
+
 
 module.exports = router;
