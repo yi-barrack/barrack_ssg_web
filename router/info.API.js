@@ -19,11 +19,43 @@ function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString('ko-KR', options);
 }
 
-router.get('/attendant', function (req, res) {
-    // 등원 버튼을 누를 시 result.attendant를 1로 변경
-    // 하원 버튼을 누릴 시 result.attendant를 0으로 변경
-    // 결석 버튼을 누를 시 result.attendant를 2로 변경
-    
+function isAdmin(req, res, next) {
+    if (req.session.username === 'admin') { // Assuming req.user stores user information
+        return next(); // User is an admin, proceed to the route
+    } else {
+        res.status(403).send('어드민만 사용 가능합니다.'); // User is not an admin, send a forbidden response
+    }
+}
+
+router.get('/attendant/:student_name/:attendant', isAdmin, function (req, res) {
+    const studentName = req.params.student_name; // Corrected variable name
+    const status = req.params.attendant;
+
+    // Define SQL query based on the status and studentName
+    let sql = '';
+    switch (status) {
+        case '1': // 등원
+            sql = 'UPDATE students SET attendant = 1 WHERE student_name = ?';
+            break;
+        case '0': // 하원
+            sql = 'UPDATE students SET attendant = 0 WHERE student_name = ?';
+            break;
+        case '2': // 결석
+            sql = 'UPDATE students SET attendant = 2 WHERE student_name = ?';
+            break;
+        default:
+            return res.status(400).send('Invalid status');
+    }
+
+    pool.query(sql, [studentName], function (err, results) {
+        if (err) {
+            console.log(err);
+            return res.status(500).send('Error updating attendance');
+        }
+
+        // Redirect back to the main page after updating attendance
+        res.redirect('/info');
+    });
 });
 
 
@@ -33,6 +65,7 @@ router.get('/', function (req, res) {
             console.log(err);
             return;
         }
+
 
         let html = `
         <!DOCTYPE html>
@@ -59,20 +92,40 @@ router.get('/', function (req, res) {
 
         results.forEach(result => {
             const formattedDate = formatDate(result.student_time);
+            let attendantText = '';
+
+            switch (result.attendant) {
+                case 1:
+                    attendantText = '등원';
+                    break;
+                case 0:
+                    attendantText = '하원';
+                    break;
+                case 2:
+                    attendantText = '결석';
+                    break;
+                default:
+                    attendantText = 'Unknown'; // Handle unknown values if needed
+                    break;
+            }
+
             html += `
-                <tr>
-                    <td>${result.student_name}</td>
-                    <td>${formattedDate}</td>
-                    <td>${result.attendant}</td>
-                    <td><button link="/info/attendant">등원</button>
-                    <button link="/info/attendant">하원</button>
-                    <button link="/info/attendant">결석</button></td>
-                </tr>
-            `;
+        <tr>
+            <td>${result.student_name}</td>
+            <td>${formattedDate}</td>
+            <td>${attendantText}</td>
+            <td>
+                <a href="/info/attendant/${result.student_name}/1">등원</a>
+                <a href="/info/attendant/${result.student_name}/0">하원</a>
+                <a href="/info/attendant/${result.student_name}/2">결석</a>
+            </td>
+        </tr>
+    `;
         });
 
         html += `</table></body></html>`;
         res.send(html);
+
     });
 });
 
